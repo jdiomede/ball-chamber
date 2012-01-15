@@ -17,8 +17,7 @@ thread balancing:
 Each thread is limited to no more than 10 balls at a time. Thus, as a thread takes on more balls, a new thread may be spawned automatically to own balls in excess of the limit per thread in order to preserve the loading balance. If a thread is reduced to owning zero balls, it will be destroyed.
 
 disclaimer(s):
-   Since my main thread needed to know about every ball in order to paint and detect collisions between all balls (especially owned by different threads), after a certain point there was no easy way to make this operation multi-threaded. Thus I chose to cap the amount of balls that can be in existence at one point in time to roughly 100. The GUI 
-will always be responsive but ball motion seemed to degrade when there were twice as many balls.
+   Since my main thread needed to know about every ball in order to paint and detect collisions between all balls (especially owned by different threads), after a certain point there was no easy way to make this operation multi-threaded. Thus I chose to cap the amount of balls that can be in existence at one point in time to roughly 100. The GUI will always be responsive but ball motion seemed to degrade when there were twice as many balls.
 
 This is the crux of load balancing, however I think this gets more into performance as I realized I needed to optimize how I detect collisions (i.e. taking a square root during calculations was unacceptable). It would be fun to dive further into this performance limit but probably not with swing.
 
