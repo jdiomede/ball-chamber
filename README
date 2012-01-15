@@ -1,41 +1,26 @@
 design:
-   The main class BallChamber is responsible for spawning all threads. Initially a thread is spawned to create the GUI 
-and call repaint every millisecond. An additional thread is spawned to update the text shown in the GUI every 100ms. 
-Lastly, two new threads are created each owning one ball with specifications chosen at random.
+   The main class BallChamber is responsible for spawning all threads. Initially a thread is spawned to create the GUI and call repaint every millisecond. An additional thread is spawned to update the text shown in the GUI every 100ms. Lastly, two new threads are created each owning one ball with specifications chosen at random.
 
 During play, as balls collide they will follow the appropriate rules as specified by the assignment:
 (1) same color; no action
-(2) different color, same size; small: add one small red ball, medium: add two small red balls, large: add two small 
-red balls and one small blue ball
+(2) different color, same size; small: add one small red ball, medium: add two small red balls, large: add two small red balls and one small blue ball
 (3) different color, different size: destroy the smaller ball
 
-Also, a small opening has been created in the top of the container to allow for small balls to escape; this is also 
-tracked in the GUI display. As required, operation can be started, paused, and stopped/restarted at any point.
+Also, a small opening has been created in the top of the container to allow for small balls to escape; this is also tracked in the GUI display. As required, operation can be started, paused, and stopped/restarted at any point.
 
 multi-threading:
-   To allow for each threaded ball to move in synchronization, a central object BallQueue has synchronized methods for 
-adding and retrieving balls to be displayed by the GUI. The BallQueue knows how many threads are currently active and 
-will not allow the GUI to access the running list of balls until all threads have made a transaction.
+   To allow for each threaded ball to move in synchronization, a central object BallQueue has synchronized methods for adding and retrieving balls to be displayed by the GUI. The BallQueue knows how many threads are currently active and will not allow the GUI to access the running list of balls until all threads have made a transaction.
 
 thread balancing:
-   New threads (initialized with a randomly chosen ball) can be added at any point during operation. As collisions occur 
-and new balls are added, a lazy form of load balancing will take place where new balls will be added to the thread with 
-the least amount of balls at the current time. When collisions occur and balls are removed, no balancing correction will 
-take place however over time as new balls are added the thread balancing will again self-correct.
+   New threads (initialized with a randomly chosen ball) can be added at any point during operation. As collisions occur and new balls are added, a lazy form of load balancing will take place where new balls will be added to the thread with the least amount of balls at the current time. When collisions occur and balls are removed, no balancing correction will take place however over time as new balls are added the thread balancing will again self-correct.
 
-Each thread is limited to no more than 10 balls at a time. Thus, as a thread takes on more balls, a new thread may be 
-spawned automatically to own balls in excess of the limit per thread in order to preserve the loading balance. If a 
-thread is reduced to owning zero balls, it will be destroyed.
+Each thread is limited to no more than 10 balls at a time. Thus, as a thread takes on more balls, a new thread may be spawned automatically to own balls in excess of the limit per thread in order to preserve the loading balance. If a thread is reduced to owning zero balls, it will be destroyed.
 
 disclaimer(s):
-   Since my main thread needed to know about every ball in order to paint and detect collisions between all balls 
-(especially owned by different threads), after a certain point there was no easy way to make this operation multi-
-threaded. Thus I chose to cap the amount of balls that can be in existence at one point in time to roughly 100. The GUI 
+   Since my main thread needed to know about every ball in order to paint and detect collisions between all balls (especially owned by different threads), after a certain point there was no easy way to make this operation multi-threaded. Thus I chose to cap the amount of balls that can be in existence at one point in time to roughly 100. The GUI 
 will always be responsive but ball motion seemed to degrade when there were twice as many balls.
 
-This is the crux of load balancing, however I think this gets more into performance as I realized I needed to optimize 
-how I detect collisions (i.e. taking a square root during calculations was unacceptable). It would be fun to dive 
-further into this performance limit but probably not with swing.
+This is the crux of load balancing, however I think this gets more into performance as I realized I needed to optimize how I detect collisions (i.e. taking a square root during calculations was unacceptable). It would be fun to dive further into this performance limit but probably not with swing.
 
 Regards,
 James
